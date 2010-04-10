@@ -1,0 +1,39 @@
+[ui]
+username = Mike Ihbe <mike@younoodle.com>
+
+
+[defaults]
+#log      = -G --style changedfiles -v
+push      = -r default
+addremove = --similarity 100
+branches  = -a
+#pull     = --rebase
+revert    = --no-backup
+[pager]
+pager = LESS='FSRX' less
+
+[diff]
+ignorews         = True
+ignorewsamount   = True
+ignoreblanklines = True
+showfunc         = True
+git              = True
+
+[extensions]
+graphlog  = 
+color     =
+fetch     =
+rebase    =
+win32text =
+zeroconf  =
+pager     =
+histedit  = /Users/mikeihbe/.hgext/histedit/
+
+
+[color]
+status.modified = magenta bold
+status.added = green bold
+status.removed = red bold
+status.deleted = cyan bold
+status.unknown = blue bold
+status.ignored = black bold
