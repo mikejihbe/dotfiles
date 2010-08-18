@@ -1,15 +1,15 @@
 #!/usr/bin/zsh
 ## Application homes
 
-#export JAVA_HOME=/usr/lib/jvm/java-6-sun
-GEM_PATH_HOME=/home/mike/.gem/ruby/1.9.1
-GEM_PATH_GLOBAL=/usr/lib/ruby1.9.1/gems/1.9.1
-export GEM_PATH=$GEM_PATH_HOME:$GEM_PATH_GLOBAL
-export GEM_HOME=~/.gem/
+# Configure rvm
+[[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
 
-# Configure path
-GEMS="$GEM_PATH_GLOBAL/bin:$GEM_PATH_HOME/bin"
-export PATH=$PATH:$GEMS
+
+# Configure JDK
+export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.20
+export JDK_HOME=$JAVA_HOME
+
+export PATH=$JDK_HOME/bin:$PATH
 
 # ENV
 LESS="iRwm"
@@ -30,6 +30,37 @@ HISTSIZE=1000
 SAVEHIST=1000000
 
 
+# Functions
+function stat {
+    if [ -d ".svn" ]; then
+svn status
+  elif [ -d ".git" ]; then
+git status
+  elif [ -d ".hg" ]; then
+hg status
+  fi
+}
+
+function alias_exists {
+  name=$1
+  value=$2
+  command=$3
+  [[ $command = "" ]] && command=$value
+  if [[ -x `qwhich $command` ]]; then
+	alias $name="$value"
+  fi
+}
+
+function chpwd {
+  [[ -t 1 ]] || return
+  case $TERM in
+	sun-cmd) print -Pn "\e]l%~\e\\"
+	  ;;
+	*xterm*|rxvt|(dt|k|E|e)term|eterm-color) print -Pn "\e]2;%~ | %M\a"
+      ;;
+  esac
+}
+
 # Aliases
 alias g=egrep
 alias p=ping
@@ -40,6 +71,9 @@ alias s=sudo
 alias su='sudo -s'
 alias mkdir='mkdir -p'
 alias ls="ls $LS_OPTIONS"
+
+alias_exists tail inotail
+alias_exists top htop
 
 # Configure prompt
 autoload -U colors && colors
@@ -136,8 +170,8 @@ zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "\e[A" history-beginning-search-backward-end
 bindkey "\e[B" history-beginning-search-forward-end
-bindkey "^[[A" history-beginning-search-backward-end
-bindkey "^[[B" history-beginning-search-forward-end
+#bindkey "^[[A" history-beginning-search-backward-end
+#bindkey "^[[B" history-beginning-search-forward-end
 bindkey "\eOA" history-beginning-search-backward-end
 bindkey "\eOB" history-beginning-search-forward-end
 zle -N history-beginning-search-menu-space-end history-beginning-search-menu
@@ -150,8 +184,8 @@ bindkey "^[[Z" reverse-menu-complete
 bindkey "^[" send-break
 bindkey "^[e" backward-kill-word
 bindkey "^[w" backward-kill-word
-bindkey "^[[H" beginning-of-line
-bindkey "^[[F" end-of-line
+#bindkey "^[[H" beginning-of-line
+#bindkey "^[[F" end-of-line
 bindkey "^[[3~" delete-char-or-list
 if [[ $TERM == "xterm" ]];then
   bindkey '^[[7~'  vi-beginning-of-line                                   # Home
@@ -170,16 +204,6 @@ true
 fi
 
 
-# Functions
-function stat {
-    if [ -d ".svn" ]; then
-svn status
-  elif [ -d ".git" ]; then
-git status
-  elif [ -d ".hg" ]; then
-hg status
-  fi
-}
 # The following lines were added by compinstall
 
 zstyle ':completion:*' completer _expand _complete _ignored _approximate

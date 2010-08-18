@@ -1,0 +1,74 @@
+[user]
+	name = Mike Ihbe
+	email = mike@mikeihbe.com
+
+[github]
+	user = mikejihbe
+	token = 29d8965f355cf069bb0ba7de1fb9fe9a
+
+[core]
+	editor = nano
+	pager = less
+	# change to tig when color.pager bug is fixed.
+
+	whitespace = trailing-space,space-before-tab,cr-at-eol
+
+[push]
+	default = matching
+
+[clean]
+	requireForce = false
+
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+	interactive = auto
+	ui = auto
+	pager = true
+
+[branch]
+	autosetuprebase = always
+
+[alias]
+	push-all = "!for i in $(git config --list | grep -E ^remote\\..+\\.url | sed 's/^remote\\.\\(.*\\)\\.url=.*/\\1/'); do git push $i master; done"
+
+	ci = commit
+	checkin = commit
+
+	co = checkout
+	discard = checkout --
+
+	switch = checkout
+
+	create-branch = checkout -b
+	delete-branch = branch -d
+
+	branches = branch -a
+
+	ls = ls-files
+
+	select = add -p
+
+	staged = diff --cached
+	unstage = reset -q HEAD
+
+	statistics = diff --stat
+
+	ignore = !echo "$@" >> .gitignore
+
+	gitkconflict = !gitk --left-right HEAD...MERGE_HEAD
+
+	s = svn
+	supdate = svn rebase
+	scommit = svn dcommit
+
+	unstash = stash pop
+
+	resolve = !git unstage
+
+	echo = "!echo $1; echo $1"
+
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
+	top = !eval cd "$(pwd)/$(git rev-parse --show-cdup)" && pwd
