@@ -6,24 +6,29 @@
 
 
 # Configure JDK
-export JAVA_HOME=/usr/lib/jvm/java-6-sun-1.6.0.20
+export JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
 export JDK_HOME=$JAVA_HOME
 
 export PATH=$JDK_HOME/bin:$PATH
 
+# MACPORTS
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export MANPATH=$MANPATH:/opt/local/man
+
 # ENV
 LESS="iRwm"
 # Allow less to view *.gz etc. files.
-eval "$(lesspipe)"
+export LESSOPEN='| /opt/local/bin/lesspipe.sh %s' # From macports
+#eval "$(lesspipe)"
 GREP_COLOR="38;5;$HOSTCOLORCODE"
 GREP_OPTIONS="--color=auto"
 CLICOLOR=1
 PAGER=less
 # Colorized ls, with options
-eval "$(dircolors)"
+#eval "$(dircolors)" # doesn't work on os x
 LS_COLORS="$LS_COLORS*.JPG=01;35:*.GIF=01;35:*.jpeg=01;35:*.pcx=01;35:*.png=01;35:*.pnm=01;35:*.bz2=01;31:*.mpg=01;38:*.mpeg=01;38:*.MPG=01;38:*.MPEG=01;38:*.m4v=01;038:*.mp4=01;038:*.swf=01;038:*.avi=01;38:*.AVI=01;38:*.wmv=01;38:*.WMV=01;38:*.asf=01;38:*.ASF=01;38:*.mov=01;38:*.MOV=01;38:*.mp3=01;39:*.ogg=01;39:*.MP3=01;39:*.Mp3=01;39"
 ZLS_COLORS=$LS_COLORS
-LS_OPTIONS="-p -l -h --color"
+LS_OPTIONS="-p -l -h -G" # --color for linux?
 
 HISTFILE=~/.zshhist
 HISTSIZE=1000
@@ -31,6 +36,19 @@ SAVEHIST=1000000
 
 
 # Functions
+
+function yammerapps-local {
+  export CLIENT_CONFIG="~/.yammer-local"
+  export PLATFORM_HOST="http://yammer.localhost"
+  yammerapps release
+}
+
+function yammerapps-staging {
+  export CLIENT_CONFIG="~/.yammer-staging"
+  export PLATFORM_HOST="https://www.staging.yammer.com"
+  yammerapps release
+}
+
 function stat {
     if [ -d ".svn" ]; then
 svn status
@@ -39,6 +57,11 @@ git status
   elif [ -d ".hg" ]; then
 hg status
   fi
+}
+
+function qwhich {
+    result=`which $@ 2> /dev/null`
+    [[ $? == 0 ]] && echo $result
 }
 
 function alias_exists {
@@ -78,7 +101,8 @@ alias_exists top htop
 # Configure prompt
 autoload -U colors && colors
 hashMod () {
-        HASH="0x`echo $1 | md5sum`"
+        HASH="0x`echo $1 | md5`" # mac
+        # HASH="0x`echo $1 | md5sum`" # linux
         DEC=$(($HASH[0,15]))
         RESULT=`expr $DEC % $2`
 }
@@ -140,8 +164,8 @@ zmodload -i zsh/computil
 
 # Set the titlebar when we change directories
 chpwd()
-# Vi keybindings
-bindkey -v
+# Emacs keybindings
+bindkey -e
 # No limits.
 ulimit -c unlimited
 
@@ -184,8 +208,8 @@ bindkey "^[[Z" reverse-menu-complete
 bindkey "^[" send-break
 bindkey "^[e" backward-kill-word
 bindkey "^[w" backward-kill-word
-#bindkey "^[[H" beginning-of-line
-#bindkey "^[[F" end-of-line
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
 bindkey "^[[3~" delete-char-or-list
 if [[ $TERM == "xterm" ]];then
   bindkey '^[[7~'  vi-beginning-of-line                                   # Home
@@ -230,3 +254,12 @@ zstyle ':completion:*:hosts' $hosts
 autoload -Uz compinit
 compinit
 # End of lines added by compinstall
+
+
+# YAMMER
+export DISPLAY=:0.0
+export PATH=/opt/ruby-enterprise-current/bin:/opt/local/lib/postgresql84/bin:$PATH
+export HOPTOAD_KEY=a6924e39ff98e6ce14555afc0dc1bb43
+
+export SCALA_HOME=~/bin/scala
+export PATH=$SCALA_HOME/bin:$PATH

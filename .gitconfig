@@ -1,13 +1,13 @@
 [user]
 	name = Mike Ihbe
-	email = mike@mikeihbe.com
+	email = mihbe@yammer-inc.com
 
 [github]
 	user = mikejihbe
 	token = 29d8965f355cf069bb0ba7de1fb9fe9a
 
 [core]
-	editor = nano
+	editor = vi
 	pager = less
 	# change to tig when color.pager bug is fixed.
 
@@ -28,10 +28,14 @@
 	pager = true
 
 [branch]
-	autosetuprebase = always
+	autosetupmerge = true
 
 [alias]
 	push-all = "!for i in $(git config --list | grep -E ^remote\\..+\\.url | sed 's/^remote\\.\\(.*\\)\\.url=.*/\\1/'); do git push $i master; done"
+
+  p = push
+  pu = pull
+  pr = pull --rebase
 
 	ci = commit
 	checkin = commit
@@ -47,9 +51,9 @@
 	branches = branch -a
 
 	ls = ls-files
-
+	stat = status
 	select = add -p
-
+	pick = cherry-pick
 	staged = diff --cached
 	unstage = reset -q HEAD
 
@@ -72,3 +76,7 @@
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 
 	top = !eval cd "$(pwd)/$(git rev-parse --show-cdup)" && pwd
+	
+	cl  = !sh -c 'git log --name-status --date-order --author=YOURNAME --no-merges --left-right --cherry-pick $0...HEAD'
+	clp = !sh -c 'git log -p --date-order --author=YOURNAME --no-merges --left-right --cherry-pick $0...HEAD'
+	cr  = !sh -c 'git rev-list --date-order --author=YOURNAME --no-merges --left-right --cherry-pick $0...HEAD'
